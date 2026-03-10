@@ -1,49 +1,241 @@
-import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
 import { COLORS, FONTS } from "../styles";
 
 const STEPS = [
-  { icon: "💍", title: "Monitor", desc: "BOK ring continuously tracks your\nautonomic nervous system signals", detail: "HRV • Skin Temperature • Blood Oxygen", startFrame: 60 },
-  { icon: "🧠", title: "Analyze", desc: "AI agent identifies patterns\nand detects stress in real-time", detail: "Pattern Recognition • Predictive Analysis", startFrame: 200 },
-  { icon: "⚡", title: "Intervene", desc: "Proactive interventions delivered\nbefore symptoms escalate", detail: "Breathing Guides • Micro-breaks • Alerts", startFrame: 340 },
+  {
+    num: "01",
+    title: "Wear",
+    desc: "Slip on BOK — lightweight titanium\nthat looks like a classic ring",
+    image: "ring-lifestyle.svg",
+    startFrame: 60,
+  },
+  {
+    num: "02",
+    title: "Monitor",
+    desc: "Dual PD sensors track heart rate,\nblood oxygen & temperature 24/7",
+    image: "ring-sensors.svg",
+    startFrame: 180,
+  },
+  {
+    num: "03",
+    title: "Insights",
+    desc: "AI-powered analysis delivers\nactionable health insights in real-time",
+    image: "ring-charger.svg",
+    startFrame: 300,
+  },
 ];
 
 export const HowItWorksScene: React.FC = () => {
   const frame = useCurrentFrame();
+
   const fadeIn = interpolate(frame, [0, 30], [0, 1], { extrapolateRight: "clamp" });
+
   const titleOpacity = interpolate(frame, [10, 40], [0, 1], { extrapolateRight: "clamp" });
-  const lineProgress = interpolate(frame, [80, 400], [0, 1], { extrapolateRight: "clamp" });
-  const fadeOut = interpolate(frame, [560, 600], [1, 0], { extrapolateRight: "clamp" });
+
+  // Progress line
+  const lineProgress = interpolate(frame, [60, 400], [0, 1], { extrapolateRight: "clamp" });
+
+  const fadeOut = interpolate(frame, [530, 570], [1, 0], { extrapolateRight: "clamp" });
 
   return (
     <AbsoluteFill style={{ backgroundColor: COLORS.black, opacity: fadeIn * fadeOut }}>
-      <div style={{ position: "absolute", top: 80, width: "100%", textAlign: "center", opacity: titleOpacity }}>
-        <h2 style={{ fontFamily: FONTS.heading, fontSize: 52, fontWeight: 300, color: COLORS.offWhite, margin: 0 }}>
-          How <span style={{ fontWeight: 600, color: COLORS.accent }}>BOK</span> Works
+      {/* Subtle gradient */}
+      <div
+        style={{
+          position: "absolute",
+          width: "100%",
+          height: "100%",
+          background: `linear-gradient(180deg, ${COLORS.black} 0%, ${COLORS.navy} 100%)`,
+        }}
+      />
+
+      {/* Title */}
+      <div
+        style={{
+          position: "absolute",
+          top: 60,
+          width: "100%",
+          textAlign: "center",
+          opacity: titleOpacity,
+        }}
+      >
+        <h2
+          style={{
+            fontFamily: FONTS.heading,
+            fontSize: 52,
+            fontWeight: 300,
+            color: COLORS.offWhite,
+            margin: 0,
+          }}
+        >
+          How{" "}
+          <span style={{ fontWeight: 600, color: COLORS.accent }}>BOK</span>{" "}
+          Works
         </h2>
       </div>
-      <div style={{ position: "absolute", top: 240, width: "100%", display: "flex", justifyContent: "center", gap: 80, padding: "0 140px" }}>
+
+      {/* Steps - horizontal layout */}
+      <div
+        style={{
+          position: "absolute",
+          top: 180,
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          gap: 60,
+          padding: "0 100px",
+        }}
+      >
         {STEPS.map((step, i) => {
-          const stepOpacity = interpolate(frame, [step.startFrame, step.startFrame + 30], [0, 1], { extrapolateRight: "clamp" });
-          const stepY = interpolate(frame, [step.startFrame, step.startFrame + 30], [50, 0], { extrapolateRight: "clamp" });
-          const detailOpacity = interpolate(frame, [step.startFrame + 40, step.startFrame + 60], [0, 1], { extrapolateRight: "clamp" });
+          const stepOpacity = interpolate(
+            frame,
+            [step.startFrame, step.startFrame + 35],
+            [0, 1],
+            { extrapolateRight: "clamp" }
+          );
+          const stepY = interpolate(
+            frame,
+            [step.startFrame, step.startFrame + 35],
+            [40, 0],
+            { extrapolateRight: "clamp" }
+          );
+          const imgOpacity = interpolate(
+            frame,
+            [step.startFrame + 20, step.startFrame + 50],
+            [0, 1],
+            { extrapolateRight: "clamp" }
+          );
+          const imgScale = interpolate(
+            frame,
+            [step.startFrame + 20, step.startFrame + 50],
+            [0.9, 1],
+            { extrapolateRight: "clamp" }
+          );
+
           return (
-            <div key={i} style={{ flex: 1, textAlign: "center", opacity: stepOpacity, transform: `translateY(${stepY}px)` }}>
-              <div style={{ width: 100, height: 100, borderRadius: "50%", border: `2px solid ${COLORS.accent}`, display: "flex", justifyContent: "center", alignItems: "center", margin: "0 auto 30px", fontSize: 44 }}>{step.icon}</div>
-              <h3 style={{ fontFamily: FONTS.heading, fontSize: 36, fontWeight: 600, color: COLORS.white, margin: "0 0 16px" }}>{step.title}</h3>
-              <p style={{ fontFamily: FONTS.body, fontSize: 22, color: COLORS.textMuted, lineHeight: 1.5, whiteSpace: "pre-line", margin: "0 0 20px" }}>{step.desc}</p>
-              <div style={{ opacity: detailOpacity }}>
-                <span style={{ fontFamily: FONTS.mono, fontSize: 14, color: COLORS.accent, backgroundColor: "rgba(0, 229, 160, 0.1)", padding: "8px 16px", borderRadius: 20, border: "1px solid rgba(0, 229, 160, 0.2)" }}>{step.detail}</span>
+            <div
+              key={i}
+              style={{
+                flex: 1,
+                opacity: stepOpacity,
+                transform: `translateY(${stepY}px)`,
+                textAlign: "center",
+              }}
+            >
+              {/* Step image */}
+              <div
+                style={{
+                  width: "100%",
+                  height: 260,
+                  borderRadius: 20,
+                  overflow: "hidden",
+                  marginBottom: 24,
+                  opacity: imgOpacity,
+                  transform: `scale(${imgScale})`,
+                  backgroundColor: COLORS.cardBg,
+                  border: `1px solid ${COLORS.cardBorder}`,
+                }}
+              >
+                <Img
+                  src={staticFile(step.image)}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                />
               </div>
+
+              {/* Step number */}
+              <div
+                style={{
+                  fontFamily: FONTS.mono,
+                  fontSize: 16,
+                  color: COLORS.accent,
+                  letterSpacing: "0.1em",
+                  marginBottom: 8,
+                }}
+              >
+                STEP {step.num}
+              </div>
+
+              {/* Step title */}
+              <h3
+                style={{
+                  fontFamily: FONTS.heading,
+                  fontSize: 36,
+                  fontWeight: 600,
+                  color: COLORS.white,
+                  margin: "0 0 12px",
+                }}
+              >
+                {step.title}
+              </h3>
+
+              {/* Step desc */}
+              <p
+                style={{
+                  fontFamily: FONTS.body,
+                  fontSize: 20,
+                  color: COLORS.textMuted,
+                  lineHeight: 1.5,
+                  whiteSpace: "pre-line",
+                  margin: 0,
+                }}
+              >
+                {step.desc}
+              </p>
             </div>
           );
         })}
       </div>
-      <div style={{ position: "absolute", top: 285, left: "50%", transform: "translateX(-50%)", width: 800, height: 4 }}>
-        <div style={{ width: `${lineProgress * 100}%`, height: "100%", background: `linear-gradient(90deg, ${COLORS.accent}, rgba(0, 229, 160, 0.3))`, borderRadius: 2 }} />
+
+      {/* Progress line */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 100,
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: 800,
+          height: 3,
+          backgroundColor: "rgba(255,255,255,0.05)",
+          borderRadius: 2,
+        }}
+      >
+        <div
+          style={{
+            width: `${lineProgress * 100}%`,
+            height: "100%",
+            background: `linear-gradient(90deg, ${COLORS.accent}, ${COLORS.health})`,
+            borderRadius: 2,
+            boxShadow: `0 0 20px ${COLORS.accent}40`,
+          }}
+        />
       </div>
-      <div style={{ position: "absolute", bottom: 100, width: "100%", textAlign: "center", opacity: interpolate(frame, [440, 470], [0, 1], { extrapolateRight: "clamp" }) }}>
-        <p style={{ fontFamily: FONTS.body, fontSize: 28, color: COLORS.offWhite, margin: 0, fontWeight: 300 }}>
-          24/7 autonomous health guardian — <span style={{ color: COLORS.accent, fontWeight: 500 }}>no manual input needed</span>
+
+      {/* Bottom label */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 50,
+          width: "100%",
+          textAlign: "center",
+          opacity: interpolate(frame, [420, 450], [0, 1], { extrapolateRight: "clamp" }),
+        }}
+      >
+        <p
+          style={{
+            fontFamily: FONTS.body,
+            fontSize: 22,
+            color: COLORS.textSecondary,
+            margin: 0,
+          }}
+        >
+          24/7 health monitoring —{" "}
+          <span style={{ color: COLORS.health, fontWeight: 500 }}>
+            no charging hassle
+          </span>
         </p>
       </div>
     </AbsoluteFill>
