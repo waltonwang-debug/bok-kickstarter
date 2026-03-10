@@ -1,61 +1,250 @@
-import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
 import { COLORS, FONTS } from "../styles";
 
 export const CTAScene: React.FC = () => {
   const frame = useCurrentFrame();
+
   const fadeIn = interpolate(frame, [0, 40], [0, 1], { extrapolateRight: "clamp" });
-  const missionOpacity = interpolate(frame, [20, 60], [0, 1], { extrapolateRight: "clamp" });
-  const believeOpacity = interpolate(frame, [60, 100], [0, 1], { extrapolateRight: "clamp" });
-  const dividerWidth = interpolate(frame, [120, 180], [0, 400], { extrapolateRight: "clamp" });
-  const ringOpacity = interpolate(frame, [200, 240], [0, 1], { extrapolateRight: "clamp" });
-  const ringScale = interpolate(frame, [200, 260], [0.85, 1], { extrapolateRight: "clamp" });
-  const pulsePhase = (frame - 240) / 30;
-  const glowIntensity = frame > 240 ? 0.4 + 0.3 * Math.sin(pulsePhase) : 0;
-  const ctaOpacity = interpolate(frame, [280, 320], [0, 1], { extrapolateRight: "clamp" });
-  const ctaY = interpolate(frame, [280, 320], [30, 0], { extrapolateRight: "clamp" });
-  const buttonOpacity = interpolate(frame, [350, 390], [0, 1], { extrapolateRight: "clamp" });
-  const buttonScale = interpolate(frame, [350, 400], [0.9, 1], { extrapolateRight: "clamp" });
-  const earlyBirdOpacity = interpolate(frame, [420, 460], [0, 1], { extrapolateRight: "clamp" });
-  const finalLogoOpacity = interpolate(frame, [520, 560], [0, 1], { extrapolateRight: "clamp" });
-  const websiteOpacity = interpolate(frame, [580, 620], [0, 1], { extrapolateRight: "clamp" });
+
+  // Ring image reappears
+  const ringOpacity = interpolate(frame, [20, 60], [0, 1], { extrapolateRight: "clamp" });
+  const ringScale = interpolate(frame, [20, 80], [0.8, 1], { extrapolateRight: "clamp" });
+
+  // Glow pulse
+  const pulsePhase = (frame - 60) / 18;
+  const glowIntensity = frame > 60 ? 0.3 + 0.25 * Math.sin(pulsePhase) : 0;
+
+  // Mission text
+  const missionOpacity = interpolate(frame, [80, 120], [0, 1], { extrapolateRight: "clamp" });
+
+  // CTA headline
+  const ctaOpacity = interpolate(frame, [160, 200], [0, 1], { extrapolateRight: "clamp" });
+  const ctaY = interpolate(frame, [160, 200], [30, 0], { extrapolateRight: "clamp" });
+
+  // Button
+  const buttonOpacity = interpolate(frame, [240, 280], [0, 1], { extrapolateRight: "clamp" });
+  const buttonScale = interpolate(frame, [240, 290], [0.9, 1], { extrapolateRight: "clamp" });
+
+  // Button glow animation
+  const btnGlow = frame > 280 ? 0.6 + 0.4 * Math.sin((frame - 280) / 15) : 0;
+
+  // Price
+  const priceOpacity = interpolate(frame, [310, 350], [0, 1], { extrapolateRight: "clamp" });
+
+  // Early bird
+  const earlyBirdOpacity = interpolate(frame, [370, 410], [0, 1], { extrapolateRight: "clamp" });
+
+  // Final logo
+  const finalLogoOpacity = interpolate(frame, [480, 520], [0, 1], { extrapolateRight: "clamp" });
+
+  // Website
+  const websiteOpacity = interpolate(frame, [540, 580], [0, 1], { extrapolateRight: "clamp" });
 
   return (
     <AbsoluteFill style={{ backgroundColor: COLORS.black, opacity: fadeIn }}>
-      <div style={{ position: "absolute", width: "100%", height: "100%", background: "radial-gradient(ellipse at center bottom, rgba(0, 229, 160, 0.08) 0%, transparent 60%)" }} />
-      <div style={{ position: "absolute", top: 100, width: "100%", textAlign: "center", opacity: missionOpacity, padding: "0 240px" }}>
-        <p style={{ fontFamily: FONTS.heading, fontSize: 32, fontWeight: 300, color: COLORS.textMuted, margin: 0, lineHeight: 1.6 }}>
-          We believe health should be <span style={{ color: COLORS.accent, fontWeight: 500 }}>proactive, not reactive</span>
+      {/* Premium gradient bg */}
+      <div
+        style={{
+          position: "absolute",
+          width: "100%",
+          height: "100%",
+          background: `radial-gradient(ellipse at center 30%, rgba(77, 166, 255, 0.06) 0%, transparent 50%),
+                       radial-gradient(ellipse at center 80%, rgba(201, 168, 76, 0.04) 0%, transparent 40%)`,
+        }}
+      />
+
+      {/* Ring product image */}
+      <div
+        style={{
+          position: "absolute",
+          top: 40,
+          left: "50%",
+          transform: `translateX(-50%) scale(${ringScale})`,
+          opacity: ringOpacity,
+          filter: `drop-shadow(0 0 ${50 * glowIntensity}px rgba(77, 166, 255, ${0.35 * glowIntensity}))`,
+        }}
+      >
+        <Img
+          src={staticFile("ring-product.svg")}
+          style={{ width: 320, height: 320, objectFit: "contain" }}
+        />
+      </div>
+
+      {/* Mission */}
+      <div
+        style={{
+          position: "absolute",
+          top: 380,
+          width: "100%",
+          textAlign: "center",
+          opacity: missionOpacity,
+          padding: "0 200px",
+        }}
+      >
+        <p
+          style={{
+            fontFamily: FONTS.heading,
+            fontSize: 28,
+            fontWeight: 300,
+            color: COLORS.textSecondary,
+            margin: 0,
+            lineHeight: 1.6,
+          }}
+        >
+          Health should be{" "}
+          <span style={{ color: COLORS.health, fontWeight: 500 }}>proactive</span>
+          , not reactive.
+          <br />
+          BOK makes it effortless.
         </p>
       </div>
-      <div style={{ position: "absolute", top: 180, width: "100%", textAlign: "center", opacity: believeOpacity, padding: "0 200px" }}>
-        <p style={{ fontFamily: FONTS.body, fontSize: 24, color: COLORS.textMuted, margin: 0, lineHeight: 1.6 }}>
-          BOK combines cutting-edge biosensors with an intelligent AI agent<br />to become your personal autonomic nervous system guardian
-        </p>
-      </div>
-      <div style={{ position: "absolute", top: 290, left: "50%", transform: "translateX(-50%)", width: dividerWidth, height: 1, backgroundColor: "rgba(0, 229, 160, 0.3)" }} />
-      <div style={{ position: "absolute", top: 330, left: "50%", transform: `translateX(-50%) scale(${ringScale})`, opacity: ringOpacity }}>
-        <div style={{ width: 140, height: 140, borderRadius: "50%", border: `2px solid ${COLORS.accent}`, display: "flex", justifyContent: "center", alignItems: "center", boxShadow: `0 0 ${30 * glowIntensity}px ${15 * glowIntensity}px rgba(0, 229, 160, ${0.3 * glowIntensity})` }}>
-          <div style={{ width: 100, height: 100, borderRadius: "50%", border: "1.5px solid rgba(0, 229, 160, 0.4)", display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <div style={{ width: 8, height: 8, borderRadius: "50%", backgroundColor: COLORS.accent, boxShadow: `0 0 12px 4px rgba(0, 229, 160, ${0.4 * glowIntensity})` }} />
-          </div>
-        </div>
-      </div>
-      <div style={{ position: "absolute", top: 520, width: "100%", textAlign: "center", opacity: ctaOpacity, transform: `translateY(${ctaY}px)` }}>
-        <h1 style={{ fontFamily: FONTS.heading, fontSize: 56, fontWeight: 600, color: COLORS.white, margin: 0 }}>
-          Take Control of Your <span style={{ color: COLORS.accent }}>Nervous System</span>
+
+      {/* CTA Headline */}
+      <div
+        style={{
+          position: "absolute",
+          top: 500,
+          width: "100%",
+          textAlign: "center",
+          opacity: ctaOpacity,
+          transform: `translateY(${ctaY}px)`,
+        }}
+      >
+        <h1
+          style={{
+            fontFamily: FONTS.heading,
+            fontSize: 60,
+            fontWeight: 700,
+            color: COLORS.white,
+            margin: 0,
+          }}
+        >
+          Join the{" "}
+          <span style={{ color: COLORS.accent }}>Revolution</span>
         </h1>
       </div>
-      <div style={{ position: "absolute", top: 630, width: "100%", display: "flex", justifyContent: "center", opacity: buttonOpacity, transform: `scale(${buttonScale})` }}>
-        <div style={{ backgroundColor: COLORS.accent, color: COLORS.black, fontFamily: FONTS.heading, fontSize: 28, fontWeight: 700, padding: "22px 60px", borderRadius: 50, letterSpacing: "0.03em", boxShadow: "0 4px 30px rgba(0, 229, 160, 0.4)" }}>Back Us on Kickstarter</div>
+
+      {/* Kickstarter Button */}
+      <div
+        style={{
+          position: "absolute",
+          top: 610,
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          opacity: buttonOpacity,
+          transform: `scale(${buttonScale})`,
+        }}
+      >
+        <div
+          style={{
+            background: `linear-gradient(135deg, ${COLORS.accent}, ${COLORS.accentGlow})`,
+            color: COLORS.white,
+            fontFamily: FONTS.heading,
+            fontSize: 30,
+            fontWeight: 700,
+            padding: "22px 64px",
+            borderRadius: 50,
+            letterSpacing: "0.03em",
+            boxShadow: `0 4px ${20 + 20 * btnGlow}px rgba(77, 166, 255, ${0.3 + 0.2 * btnGlow})`,
+          }}
+        >
+          Back Us on Kickstarter
+        </div>
       </div>
-      <div style={{ position: "absolute", top: 720, width: "100%", textAlign: "center", opacity: earlyBirdOpacity }}>
-        <p style={{ fontFamily: FONTS.body, fontSize: 22, color: COLORS.warning, margin: 0 }}>Early Bird pricing available — Limited quantity</p>
+
+      {/* Price */}
+      <div
+        style={{
+          position: "absolute",
+          top: 700,
+          width: "100%",
+          textAlign: "center",
+          opacity: priceOpacity,
+        }}
+      >
+        <p style={{ fontFamily: FONTS.heading, fontSize: 22, color: COLORS.textMuted, margin: 0 }}>
+          Starting from{" "}
+          <span style={{ color: COLORS.white, fontWeight: 600, fontSize: 28 }}>$99</span>
+          <span style={{ color: COLORS.textMuted, fontSize: 18, marginLeft: 8, textDecoration: "line-through" }}>$199</span>
+        </p>
       </div>
-      <div style={{ position: "absolute", bottom: 120, width: "100%", textAlign: "center", opacity: finalLogoOpacity }}>
-        <span style={{ fontFamily: FONTS.heading, fontSize: 48, fontWeight: 700, color: COLORS.white, letterSpacing: "0.15em" }}>BOK</span>
+
+      {/* Early bird */}
+      <div
+        style={{
+          position: "absolute",
+          top: 760,
+          width: "100%",
+          textAlign: "center",
+          opacity: earlyBirdOpacity,
+        }}
+      >
+        <div
+          style={{
+            display: "inline-block",
+            padding: "8px 24px",
+            borderRadius: 20,
+            backgroundColor: "rgba(255, 176, 32, 0.1)",
+            border: "1px solid rgba(255, 176, 32, 0.3)",
+          }}
+        >
+          <span
+            style={{
+              fontFamily: FONTS.body,
+              fontSize: 18,
+              color: COLORS.warning,
+              fontWeight: 500,
+            }}
+          >
+            Early Bird — Limited to first 500 backers
+          </span>
+        </div>
       </div>
-      <div style={{ position: "absolute", bottom: 70, width: "100%", textAlign: "center", opacity: websiteOpacity }}>
-        <span style={{ fontFamily: FONTS.mono, fontSize: 18, color: COLORS.textMuted }}>www.getbok.com</span>
+
+      {/* Final BOK logo */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 100,
+          width: "100%",
+          textAlign: "center",
+          opacity: finalLogoOpacity,
+        }}
+      >
+        <span
+          style={{
+            fontFamily: FONTS.heading,
+            fontSize: 56,
+            fontWeight: 700,
+            color: COLORS.white,
+            letterSpacing: "0.15em",
+          }}
+        >
+          BOK
+        </span>
+      </div>
+
+      {/* Website */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: 50,
+          width: "100%",
+          textAlign: "center",
+          opacity: websiteOpacity,
+        }}
+      >
+        <span
+          style={{
+            fontFamily: FONTS.mono,
+            fontSize: 18,
+            color: COLORS.textMuted,
+            letterSpacing: "0.05em",
+          }}
+        >
+          www.bokring.com
+        </span>
       </div>
     </AbsoluteFill>
   );
